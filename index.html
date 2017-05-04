@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body onload="tablecontent();">
+<div class="container">
+	<br>
+	<br>
+<button class="btn btn-success" data-toggle="modal" data-target="#add">add new user</button>
+
+		<div class="modal fade" id="add">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">add new user </h4>
+					</div>
+					<div class="modal-body">
+
+					<form  id="formdata" onsubmit="return newuser_func();">
+
+					<div class="form-group">
+						<label >name</label>
+						<input type="text" id="name" class="form-control">
+						</div>
+
+						<div class="form-group">
+						<label>phone</label>
+						<input type="number" id="phone" class="form-control">
+						</div>
+
+						<div class="form-group">
+						<label>email</label>
+						<input type="email" id="email" class="form-control">
+						</div>
+
+						<div class="form-group">
+						<label>address</label>
+						<input type="text" id="address" class="form-control">
+						</div>
+
+                         <div class="form-group">
+                        <input type="submit"  class="btn btn-success btn-block form-control" value="Save changes">
+                        </div>
+                     </form>
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	
+
+    <br>
+	<br>
+	<table class="table table-bordered table-hover">
+     <thead >
+     	<tr class="active">
+     		<th>#</th>
+     		<th>ID</th>
+     		<th>name</th>
+     		<th>phone</th>
+     		<th>email</th>
+     		<th>address</th>
+     		<th>option</th>
+     	</tr>
+     </thead>
+     <tbody id="tabledata">
+     	
+     </tbody>
+	</table>
+
+
+</div>
+<!-- jquery library -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+	
+function tablecontent(){
+	var xmlajax=new XMLHttpRequest();
+
+	xmlajax.onreadystatechange = function(){
+		if (xmlajax.readyState == 4 && xmlajax.status == 200) {
+		document.getElementById('tabledata').innerHTML = xmlajax.responseText;
+		}
+	}
+	xmlajax.open('GET','ajax_pro.php',true),
+	xmlajax.send();
+
+}
+
+
+function newuser_func(){
+  
+  var name=document.getElementById('name').value,
+      email=document.getElementById('email').value,
+      phone=document.getElementById('phone').value,
+      address=document.getElementById('address').value;
+
+    var xmlajaxz=new XMLHttpRequest();
+
+    var formdata=document.getElementById('formdata');
+
+     xmlajaxz.onreadystatechange = function(){
+			if (xmlajaxz.readyState == 4 && xmlajaxz.status == 200) {
+				console.log(xmlajaxz.responseText);
+			document.getElementById('tabledata').innerHTML = xmlajaxz.responseText;
+			}
+		}
+		
+      xmlajaxz.open('GET',"ajax_pro.php?submitform=yes"+"&name="+name+"&phone="+phone+"&email="+email+"&address="+address,true);
+
+      xmlajaxz.send();
+      
+
+
+   $('#add').modal('hide');
+
+    formdata.reset();
+		return false;
+}
+
+
+function userdel(id){
+	
+var xmlajax=new XMLHttpRequest();
+
+	xmlajax.onreadystatechange = function(){
+		if (xmlajax.readyState == 4 && xmlajax.status == 200) {
+		document.getElementById('tabledata').innerHTML = xmlajax.responseText;
+		}
+	}
+	xmlajax.open('GET','ajax_pro.php?id='+id+'&DEL=YES',true),
+	xmlajax.send();
+	
+}
+
+
+function  edit_user(user_id){
+	
+var edit_name=document.getElementById('edit_name'+ user_id).value,
+      edit_email=document.getElementById('edit_email'+ user_id).value,
+      edit_phone=document.getElementById('edit_phone'+ user_id).value,
+      edit_address=document.getElementById('edit_address'+ user_id).value;
+
+    var xmledit=new XMLHttpRequest();
+
+     xmledit.onreadystatechange = function(){
+			if (xmledit.readyState == 4 && xmledit.status == 200) {
+				
+			document.getElementById('tabledata').innerHTML = xmledit.responseText;
+			}
+		}
+		
+      xmledit.open('GET',"ajax_pro.php?editform=yes"+"&ID="+user_id+"&name="+edit_name+"&phone="+edit_phone+"&email="+edit_email+"&address="+edit_address,true);
+
+      xmledit.send();
+
+
+	$('#edit'+user_id).modal('hide');
+
+	return false;
+}
+
+	
+</script>
+</body>
+</html>
